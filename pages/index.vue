@@ -10,6 +10,7 @@
     <LandingRequestDemo />
     <LandingTeam />
     <LandingContact />
+    <LandingCollaborations />
   </div>
 </template>
 
