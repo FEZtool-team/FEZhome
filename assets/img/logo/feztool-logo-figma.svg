@@ -1,0 +1,60 @@
+<svg width="1000" height="1000" viewBox="0 0 1000 1000" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="1000" height="1000" fill="#353535"/>
+<g id="Base Logo">
+<rect width="1000" height="1000" fill="white"/>
+<rect id="Rectangle 56" x="575" y="531" width="150" height="50" fill="#212529"/>
+<rect id="Rectangle 53" x="575" y="331" width="150" height="50" fill="#212529"/>
+<path id="Vector 2" d="M675 381H725L650 456L625 531H575L650 456L675 381Z" fill="#212529"/>
+<path id="Vector 3" d="M633.333 406H600L650 456L666.667 506H700L650 456L633.333 406Z" fill="#212529"/>
+<path id="Vector 4" d="M600 439.333L600 406L650 456L700 472.667L700 506L650 456L600 439.333Z" fill="#6C757D"/>
+<g id="Group 8">
+<rect id="Rectangle 52" x="475" y="531" width="100" height="50" fill="#212529"/>
+<rect id="Rectangle 54" x="475" y="331" width="100" height="50" fill="#212529"/>
+<rect id="Rectangle 49" x="475" y="331" width="250" height="50" transform="rotate(90 475 331)" fill="#212529"/>
+<rect id="Rectangle 50" x="525" y="481" width="50" height="50" transform="rotate(-180 525 481)" fill="#212529"/>
+</g>
+<g id="Group 9">
+<rect id="Rectangle 46" x="375" y="481" width="50" height="50" transform="rotate(-180 375 481)" fill="#212529"/>
+<rect id="Rectangle 47" x="275" y="581" width="250" height="50" transform="rotate(-90 275 581)" fill="#212529"/>
+<rect id="Rectangle 55" x="325" y="331" width="100" height="50" fill="#212529"/>
+</g>
+<g id="Frame 1000004196">
+<g id="Group 1000004176">
+<rect id="Rectangle 87" x="275" y="606" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 88" x="275" y="668" width="62" height="12.3333" transform="rotate(-90 275 668)" fill="#212529"/>
+<rect id="Rectangle 89" x="275" y="630.8" width="24.6667" height="12.4" fill="#212529"/>
+</g>
+<g id="Group 1000004175">
+<rect id="Rectangle 57" x="343.833" y="606" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 58" x="343.833" y="655.6" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 59" x="343.833" y="630.8" width="24.6667" height="12.4" fill="#212529"/>
+<rect id="Rectangle 55_2" x="343.833" y="668" width="62" height="12.3333" transform="rotate(-90 343.833 668)" fill="#212529"/>
+</g>
+<g id="Group 1000004174">
+<rect id="Rectangle 90" x="412.666" y="606" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 91" x="412.666" y="655.6" width="37" height="12.4" fill="#212529"/>
+<path id="Vector 20" d="M412.666 655.6L437.333 618.4H449.666L424.999 655.6H412.666Z" fill="#212529"/>
+</g>
+<g id="Group 1000004170">
+<rect id="Rectangle 82" x="481.5" y="606" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 83" x="493.833" y="668" width="62" height="12.3333" transform="rotate(-90 493.833 668)" fill="#212529"/>
+</g>
+<g id="Group 1000004171">
+<rect id="Rectangle 76" x="550.333" y="606" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 77" x="550.333" y="655.6" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 84" x="550.333" y="668" width="62" height="12.3333" transform="rotate(-90 550.333 668)" fill="#212529"/>
+<rect id="Rectangle 85" x="575" y="668" width="62" height="12.3333" transform="rotate(-90 575 668)" fill="#212529"/>
+</g>
+<g id="Group 1000004172">
+<rect id="Rectangle 78" x="619.166" y="606" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 79" x="619.166" y="655.6" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 80" x="619.166" y="668" width="62" height="12.3333" transform="rotate(-90 619.166 668)" fill="#212529"/>
+<rect id="Rectangle 81" x="643.833" y="668" width="62" height="12.3333" transform="rotate(-90 643.833 668)" fill="#212529"/>
+</g>
+<g id="Group 1000004173">
+<rect id="Rectangle 86" x="688" y="655.6" width="37" height="12.4" fill="#212529"/>
+<rect id="Rectangle 75" x="688" y="668" width="62" height="12.3333" transform="rotate(-90 688 668)" fill="#212529"/>
+</g>
+</g>
+</g>
+</svg>

@@ -1,0 +1,259 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*
+ * Design tokens. Colors are stored as RGB channels so Tailwind opacity
+ * modifiers work (bg-rs-500/10). Tailwind names: fez-*, rs-*, cc-*, fm-*.
+ * Monochrome fez-* is the FEZtool/team brand; rs/cc/fm are used only where
+ * that tool is presented. Dark is the default; the light theme below
+ * redefines the same variables, so components never need theme variants.
+ */
+:root {
+  /* FEZteam brand, monochrome. 50/100/400/500/700/900 come from the Figma palette (node 349-116). */
+  --fez-50: 248 249 250; /* #F8F9FA */
+  --fez-100: 233 236 239; /* #E9ECEF */
+  --fez-200: 222 226 230; /* #DEE2E6 */
+  --fez-300: 206 212 218; /* #CED4DA */
+  --fez-400: 173 181 189; /* #ADB5BD */
+  --fez-500: 108 117 125; /* #6C757D */
+  --fez-600: 73 80 87; /* #495057 */
+  --fez-700: 52 58 64; /* #343A40 */
+  --fez-800: 43 48 53; /* #2B3035 */
+  --fez-900: 33 37 41; /* #212529 */
+  --fez-950: 26 29 32; /* #1A1D20 */
+  /* FEZrs green */
+  --rs-50: 244 250 235; /* #F4FAEB */
+  --rs-100: 229 243 207; /* #E5F3CF */
+  --rs-200: 203 231 161; /* #CBE7A1 */
+  --rs-300: 169 215 102; /* #A9D766 */
+  --rs-400: 140 198 58; /* #8CC63A */
+  --rs-500: 114 176 29; /* #72B01D */
+  --rs-600: 90 140 22; /* #5A8C16 */
+  --rs-700: 69 107 19; /* #456B13 */
+  --rs-800: 56 85 20; /* #385514 */
+  --rs-900: 47 71 20; /* #2F4714 */
+  /* FEZcc orange */
+  --cc-50: 255 247 237; /* #FFF7ED */
+  --cc-100: 255 237 213; /* #FFEDD5 */
+  --cc-200: 254 215 170; /* #FED7AA */
+  --cc-300: 253 186 116; /* #FDBA74 */
+  --cc-400: 251 146 60; /* #FB923C */
+  --cc-500: 249 115 22; /* #F97316 */
+  --cc-600: 234 88 12; /* #EA580C */
+  --cc-700: 194 65 12; /* #C2410C */
+  --cc-800: 154 52 18; /* #9A3412 */
+  --cc-900: 124 45 18; /* #7C2D12 */
+  /* FEZfm blue */
+  --fm-50: 239 246 255; /* #EFF6FF */
+  --fm-100: 219 234 254; /* #DBEAFE */
+  --fm-200: 191 219 254; /* #BFDBFE */
+  --fm-300: 147 197 253; /* #93C5FD */
+  --fm-400: 96 165 250; /* #60A5FA */
+  --fm-500: 59 130 246; /* #3B82F6 */
+  --fm-600: 37 99 235; /* #2563EB */
+  --fm-700: 29 78 216; /* #1D4ED8 */
+  --fm-800: 30 64 175; /* #1E40AF */
+  --fm-900: 30 58 138; /* #1E3A8A */
+
+  --border-glass: rgba(255, 255, 255, 0.08);
+  --border-glass-strong: rgba(255, 255, 255, 0.16);
+
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+
+  --space-section: clamp(5rem, 10vw, 8.5rem);
+  --space-gutter: clamp(1rem, 4vw, 2rem);
+
+  --glow-rs: 0 0 64px -16px rgb(var(--rs-500) / 0.55);
+  --glow-cc: 0 0 64px -16px rgb(var(--cc-500) / 0.55);
+  --glow-fm: 0 0 64px -16px rgb(var(--fm-500) / 0.55);
+  --shadow-panel: 0 24px 48px -24px rgb(0 0 0 / 0.6);
+
+  --on-tool: 26 29 32;
+  --logo-accent: 173 181 189;
+  --star-alpha: 0.7;
+
+  /* Syntax highlighting (code blocks only). */
+  --syntax-keyword: 233 236 239;
+  --syntax-string: 169 215 102;
+  --syntax-func: 125 211 252;
+  --syntax-number: 253 186 116;
+  --syntax-comment: 108 117 125;
+  --syntax-flag: 173 181 189;
+}
+
+/* Light theme: html[data-theme] is set before paint by the script in nuxt.config.ts. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  /* Neutral scale inverted around 500 so classes keep their meaning. */
+  --fez-50: 26 29 32; /* #1A1D20 */
+  --fez-100: 33 37 41; /* #212529 */
+  --fez-200: 43 48 53; /* #2B3035 */
+  --fez-300: 52 58 64; /* #343A40 */
+  --fez-400: 73 80 87; /* #495057 */
+  --fez-500: 92 99 106; /* #5C636A */
+  --fez-600: 173 181 189; /* #ADB5BD */
+  --fez-700: 206 212 218; /* #CED4DA */
+  --fez-800: 222 226 230; /* #DEE2E6 */
+  --fez-900: 233 236 239; /* #E9ECEF */
+  --fez-950: 248 249 250; /* #F8F9FA */
+  /* Tool scales flipped (50<->900) so tinted text stays readable on light. */
+  --rs-50: 47 71 20;
+  --rs-100: 56 85 20;
+  --rs-200: 69 107 19;
+  --rs-300: 90 140 22;
+  --rs-400: 114 176 29;
+  --rs-500: 140 198 58;
+  --rs-600: 169 215 102;
+  --rs-700: 203 231 161;
+  --rs-800: 229 243 207;
+  --rs-900: 244 250 235;
+  --cc-50: 124 45 18;
+  --cc-100: 154 52 18;
+  --cc-200: 194 65 12;
+  --cc-300: 234 88 12;
+  --cc-400: 249 115 22;
+  --cc-500: 251 146 60;
+  --cc-600: 253 186 116;
+  --cc-700: 254 215 170;
+  --cc-800: 255 237 213;
+  --cc-900: 255 247 237;
+  --fm-50: 30 58 138;
+  --fm-100: 30 64 175;
+  --fm-200: 29 78 216;
+  --fm-300: 37 99 235;
+  --fm-400: 59 130 246;
+  --fm-500: 96 165 250;
+  --fm-600: 147 197 253;
+  --fm-700: 191 219 254;
+  --fm-800: 219 234 254;
+  --fm-900: 239 246 255;
+
+  --border-glass: rgba(0, 0, 0, 0.1);
+  --border-glass-strong: rgba(0, 0, 0, 0.18);
+  --shadow-panel: 0 24px 48px -24px rgb(0 0 0 / 0.18);
+  --logo-accent: 108 117 125;
+  --star-alpha: 0.25;
+
+  --syntax-keyword: 33 37 41;
+  --syntax-string: 69 107 19;
+  --syntax-func: 3 105 161;
+  --syntax-number: 194 65 12;
+  --syntax-comment: 108 117 125;
+  --syntax-flag: 73 80 87;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    color-scheme: dark;
+  }
+  /* Clears the fixed navbar for both native anchors and router hash scrolls. */
+  [id] {
+    scroll-margin-top: 4.5rem;
+  }
+  body {
+    @apply bg-fez-900 text-fez-100 font-sans antialiased;
+  }
+  ::selection {
+    @apply bg-fez-50 text-fez-900;
+  }
+  :focus-visible {
+    outline: 2px solid rgb(var(--fez-50));
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Translucent surface with a hairline border. */
+  .glass {
+    background: rgb(var(--fez-800) / 0.55);
+    border: 1px solid var(--border-glass);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  /* Monochrome metallic fill for large display type. */
+  .text-gradient {
+    background: linear-gradient(180deg, rgb(var(--fez-50)) 30%, rgb(var(--fez-400)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Faint coordinate grid, the moodboard's blueprint texture. */
+  .bg-grid {
+    background-image: linear-gradient(var(--border-glass) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border-glass) 1px, transparent 1px);
+    background-size: 64px 64px;
+    background-position: center top;
+  }
+
+  /* Starfield: layered radial gradients, no images. */
+  .bg-starfield {
+    background-image: radial-gradient(1px 1px at 12% 18%, rgb(var(--fez-50) / 0.8), transparent 60%),
+      radial-gradient(1px 1px at 27% 72%, rgb(var(--fez-50) / 0.55), transparent 60%),
+      radial-gradient(1.5px 1.5px at 41% 33%, rgb(var(--fez-50) / 0.7), transparent 60%),
+      radial-gradient(1px 1px at 58% 84%, rgb(var(--fez-50) / 0.5), transparent 60%),
+      radial-gradient(1px 1px at 66% 12%, rgb(var(--fez-50) / 0.75), transparent 60%),
+      radial-gradient(1.5px 1.5px at 79% 46%, rgb(var(--fez-50) / 0.6), transparent 60%),
+      radial-gradient(1px 1px at 88% 78%, rgb(var(--fez-50) / 0.7), transparent 60%),
+      radial-gradient(1px 1px at 94% 24%, rgb(var(--fez-50) / 0.45), transparent 60%),
+      radial-gradient(1px 1px at 6% 58%, rgb(var(--fez-50) / 0.5), transparent 60%),
+      radial-gradient(1px 1px at 35% 8%, rgb(var(--fez-50) / 0.6), transparent 60%),
+      radial-gradient(1px 1px at 50% 55%, rgb(var(--fez-50) / 0.35), transparent 60%),
+      radial-gradient(1px 1px at 19% 92%, rgb(var(--fez-50) / 0.45), transparent 60%);
+    background-size: 420px 420px;
+    opacity: var(--star-alpha);
+  }
+
+  .paragraph {
+    @apply text-fez-400 leading-relaxed;
+  }
+
+  .field {
+    @apply block w-full rounded-md border border-glass bg-fez-950/60 px-3.5 py-2.5 text-sm text-fez-50 placeholder-fez-500 transition-colors focus:border-fez-400 focus:outline-none;
+  }
+  .field-label {
+    @apply mb-1.5 block text-sm text-fez-300;
+  }
+}
+
+/* remove the spinner on number inputs */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Outside @layer on purpose: these classes are emitted from TS/runtime
+   strings that Tailwind's content scan does not see, so they must not be purged. */
+/* Light-colored partner logos need inverting on the light theme. */
+:root[data-theme="light"] .invert-on-light {
+  filter: invert(1) brightness(0.35);
+}
+
+/* Syntax tokens, emitted by components/tools/CodeBlock.vue. */
+.tok-keyword { color: rgb(var(--syntax-keyword)); font-weight: 600; }
+.tok-string { color: rgb(var(--syntax-string)); }
+.tok-func { color: rgb(var(--syntax-func)); }
+.tok-number { color: rgb(var(--syntax-number)); }
+.tok-comment { color: rgb(var(--syntax-comment)); font-style: italic; }
+.tok-flag { color: rgb(var(--syntax-flag)); }
+.tok-prompt { color: rgb(var(--syntax-comment)); user-select: none; }
