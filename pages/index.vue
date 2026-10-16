@@ -1,6 +1,8 @@
 <template>
   <div>
     <LandingHero />
+    <LandingAbout />
+    <LandingTools />
   </div>
 </template>
 
