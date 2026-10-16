@@ -1,7 +1,9 @@
 <p align="center">
   <a href="https://feztool-team.github.io/FEZhome/">
-    <img src="assets/img/logo/logo-dark.svg#gh-light-mode-only" alt="FEZtool" width="160">
-    <img src="assets/img/logo/logo-light.svg#gh-dark-mode-only" alt="FEZtool" width="160">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="assets/img/logo/logo-light.svg">
+      <img src="assets/img/logo/logo-dark.svg" alt="FEZtool" width="160">
+    </picture>
   </a>
 </p>
 
