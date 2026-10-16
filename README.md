@@ -1,31 +1,40 @@
-# FEZhome
+<p align="center">
+  <a href="https://feztool-team.github.io/FEZhome/">
+    <img src="assets/img/logo/logo-dark.svg#gh-light-mode-only" alt="FEZtool" width="160">
+    <img src="assets/img/logo/logo-light.svg#gh-dark-mode-only" alt="FEZtool" width="160">
+  </a>
+</p>
 
-Landing page for [FEZtool](https://github.com/FEZtool-team), "Free & Easy" open-source tools for Earth sciences. It presents the FEZ ecosystem (FEZrs, plus the planned FEZcc and FEZfm), FEZrs results and research, the team, and contact channels.
+<h1 align="center">FEZtool</h1>
 
-Built with Nuxt 3, Tailwind CSS and Outfit. The site is generated statically for GitHub Pages at `https://feztool-team.github.io/FEZhome/`.
+<p align="center">
+  Free &amp; Easy tools for Earth sciences<br>
+  <a href="https://feztool-team.github.io/FEZhome/"><strong>feztool-team.github.io/FEZhome</strong></a>
+</p>
 
-## Develop
+This repository is the home page of **FEZtool**, an open-source initiative that builds free, easy-to-use tools for Earth-science researchers, engineers and students. The name says it: **F**ree and **EZ** (easy).
 
-```bash
-npm install
-npm run dev        # http://localhost:3035
-npm run build
-```
+## Tools
 
-## Generate for GitHub Pages
+| Tool | Domain | Status |
+|---|---|---|
+| [**FEZrs**](https://github.com/FEZtool-team/FEZrs) | Remote sensing: a Python package for geospatial multispectral image processing, with spectral indices, filters, enhancement, change detection, clustering and classification behind one calculator API | Available on [PyPI](https://pypi.org/project/fezrs/) and [Anaconda](https://anaconda.org/FEZtool/fezrs) |
+| **FEZcc** | Climate-change analytics | In planning |
+| **FEZfm** | Fault and geohazard monitoring | In planning |
 
-```bash
-NUXT_APP_BASE_URL=/FEZhome/ npm run generate   # output: .output/public
-```
+## Learn more
 
-`.github/workflows/deploy.yml` does this on every push to `main` and publishes with GitHub Pages (Settings → Pages → Source: GitHub Actions).
+- **Website:** [feztool-team.github.io/FEZhome](https://feztool-team.github.io/FEZhome/)
+- **Documentation:** [FEZdocs](https://feztool-team.github.io/FEZdocs/)
+- **FEZrs paper:** [manuscript](https://github.com/FEZtool-team/FEZrs/blob/main/paper/paper.md) (under review at the Journal of Open Source Software)
+- **Team:** [FEZteam](https://feztool-team.github.io/FEZhome/#team)
 
-## Project notes
+## Community
 
-- Design tokens, brand rules and writing tone: `.claude/skills/fez-brand/SKILL.md`
-- FEZrs facts and remote-sensing vocabulary: `.claude/skills/fezrs-reference/SKILL.md`
-- Build and deploy details: `.claude/skills/fezhome-deploy/SKILL.md`
+[GitHub](https://github.com/FEZtool-team) · [LinkedIn](https://www.linkedin.com/company/feztool) · [Instagram](https://www.instagram.com/fez.tool) · [Reddit r/FEZtool](https://www.reddit.com/r/FEZtool/) · [Telegram](https://t.me/FEZtool) · [info@feztool.com](mailto:info@feztool.com)
+
+Found a problem with the website? [Open an issue](https://github.com/FEZtool-team/FEZhome/issues).
 
 ## License
 
-Code under Apache-2.0 (see `LICENSE`). FEZrs images in `assets/img/fezrs/` come from the [FEZrs repository](https://github.com/FEZtool-team/FEZrs) (Apache-2.0).
+Website code is released under the [Apache-2.0 license](LICENSE). FEZtool documentation and other content are released under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Images of FEZrs outputs come from the [FEZrs repository](https://github.com/FEZtool-team/FEZrs) (Apache-2.0).
