@@ -5,6 +5,8 @@
     <LandingTools />
     <LandingFezrs />
     <LandingShowcase />
+    <LandingResearch />
+    <LandingDocumentation />
   </div>
 </template>
 
