@@ -3,6 +3,8 @@
     <LandingHero />
     <LandingAbout />
     <LandingTools />
+    <LandingFezrs />
+    <LandingShowcase />
   </div>
 </template>
 
