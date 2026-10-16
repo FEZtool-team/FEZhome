@@ -8,6 +8,7 @@
     <LandingResearch />
     <LandingDocumentation />
     <LandingRequestDemo />
+    <LandingTeam />
     <LandingContact />
   </div>
 </template>
