@@ -15,7 +15,7 @@ npm run build                                 # github-pages preset → .output/
 NUXT_APP_BASE_URL=/FEZhome/ npm run generate  # what CI deploys
 ```
 
-Verify changes with `npm run build` and a check in the dev server, including a 375px mobile width with no horizontal scroll. Only one Nuxt process can run per checkout: stop `nuxt dev` before running `build`/`generate`, or the lock check fails. npm only (`package-lock.json`).
+Verify changes with `npm run build` and a check in the dev server, including a 375px mobile width with no horizontal scroll. Use Node 24 / npm 11 (same as CI) so `package-lock.json` stays valid for `npm ci`. `README.md` is the public face of the org's home page: keep it about FEZtool, not about building the site. Only one Nuxt process can run per checkout: stop `nuxt dev` before running `build`/`generate`, or the lock check fails. npm only (`package-lock.json`).
 
 ## Project skills
 

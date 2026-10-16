@@ -28,7 +28,7 @@ NUXT_APP_BASE_URL=/FEZhome/ npm run generate
 **Caveats**
 - Anything in `public/` that is referenced by a hard-coded absolute path such as `/favicon.svg` will 404 under `/FEZhome/`. Build such paths from `baseURL`, or import the file from `assets/`.
 - In-page links are plain `#anchors`, so they work under any base.
-- `public/.nojekyll` must stay, or Pages drops the `_nuxt/` folder.
+- Pages deploys from GitHub Actions, so Jekyll never runs and `_nuxt/` is served as is. `public/.nojekyll` is only a safeguard in case the source is ever switched to "Deploy from a branch". `upload-pages-artifact` v4+ leaves dotfiles out of the artifact anyway.
 
 To check the sub-path build locally, serve the output under the same prefix:
 
@@ -39,8 +39,10 @@ npx serve /tmp/fezhome-serve -l 4000   # open http://localhost:4000/FEZhome/
 
 ## Deploy
 
-`.github/workflows/deploy.yml` runs on every push to `main`: `npm ci`, then `NUXT_APP_BASE_URL=/FEZhome/ npm run generate`, then `actions/upload-pages-artifact` (`.output/public`) and `actions/deploy-pages`.
+`.github/workflows/deploy.yml` runs on every push to `main` on **Node 24 (npm 11)**: `npm ci`, then `NUXT_APP_BASE_URL=/FEZhome/ npm run generate`, then `actions/upload-pages-artifact` (`.output/public`) and `actions/deploy-pages`.
 
-One-time repository setup: Settings → Pages → Source: **GitHub Actions**.
+Repository: https://github.com/FEZtool-team/FEZhome (public). Pages source is **GitHub Actions** (already set).
+
+**Lockfile:** CI uses `npm ci`, which needs `package-lock.json` to match the npm major version in CI. Regenerate the lockfile with npm 11 (Node 24) only. An npm 10 runner rejects npm 11 lockfiles for this dependency tree (`Missing: unplugin@3.4.0 from lock file`).
 
 Publishing is a deliberate step. Do not create the remote, push or enable Pages unless the user asks for it.
