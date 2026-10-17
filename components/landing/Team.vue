@@ -27,7 +27,7 @@
               loading="lazy"
             />
           </div>
-          <h3 class="mt-5 text-lg leading-snug text-fez-50">
+          <h3 class="mt-5 text-lg font-medium leading-snug text-fez-50">
             <!-- The name link covers the whole card; the icon links sit above it. -->
             <NuxtLink :to="`/team/${member.slug}`" class="after:absolute after:inset-0 after:rounded-md">
               {{ member.name }}

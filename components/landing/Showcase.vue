@@ -62,7 +62,7 @@
 
       <!-- Before / after comparisons -->
       <div class="col-span-12">
-        <h3 class="text-2xl font-light text-fez-50">Compare two outputs of the same scene</h3>
+        <h3 class="text-2xl font-semibold text-fez-50">Compare two outputs of the same scene</h3>
         <p class="paragraph mt-3 max-w-2xl">Drag the handle to move between the two results.</p>
         <div class="mt-8 grid gap-8 md:grid-cols-2">
           <figure v-for="pair in pairs" :key="pair.title">

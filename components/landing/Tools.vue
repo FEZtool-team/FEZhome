@@ -21,7 +21,7 @@
           <ToolsToolBadge tool="rs" size="lg" />
           <span class="rounded-full bg-rs-500/15 px-3 py-1 text-xs font-medium text-rs-300">Available</span>
         </div>
-        <h3 id="tool-rs" class="mt-8 text-3xl font-light text-fez-50">FEZrs</h3>
+        <h3 id="tool-rs" class="mt-8 text-3xl font-semibold text-fez-50">FEZrs</h3>
         <p class="mt-1 text-sm text-rs-300">Remote sensing</p>
         <p class="mt-5 max-w-xl leading-relaxed text-fez-300">
           An open-source Python package for geospatial multispectral image processing and remote sensing:
@@ -59,7 +59,7 @@
             <ToolsToolBadge :tool="tool.id" />
             <span class="rounded-full px-3 py-1 text-xs" :class="tool.pill">In planning</span>
           </div>
-          <h3 :id="`tool-${tool.id}`" class="mt-6 text-2xl font-light text-fez-50">{{ tool.name }}</h3>
+          <h3 :id="`tool-${tool.id}`" class="mt-6 text-2xl font-semibold text-fez-50">{{ tool.name }}</h3>
           <p class="mt-1 text-sm" :class="tool.accent">{{ tool.domain }}</p>
           <p class="mt-4 text-sm leading-relaxed text-fez-400">{{ tool.vision }}</p>
         </article>

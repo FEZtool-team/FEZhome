@@ -34,7 +34,7 @@
         <ul class="grid border-l border-t border-glass sm:grid-cols-2">
           <li v-for="area in areas" :key="area.title" class="border-b border-r border-glass p-7">
             <component :is="area.icon" class="text-3xl text-fez-300" aria-hidden="true" />
-            <h3 class="mt-6 text-lg text-fez-50">{{ area.title }}</h3>
+            <h3 class="mt-6 text-lg font-medium text-fez-50">{{ area.title }}</h3>
             <p class="mt-2 text-sm leading-relaxed text-fez-400">{{ area.text }}</p>
           </li>
         </ul>

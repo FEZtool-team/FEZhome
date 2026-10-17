@@ -27,7 +27,7 @@
 
       <!-- The three-line pattern -->
       <div class="col-span-12 lg:col-span-4">
-        <h3 class="text-2xl font-light text-fez-50">The same three lines for every operation</h3>
+        <h3 class="text-2xl font-semibold text-fez-50">The same three lines for every operation</h3>
         <p class="paragraph mt-4">
           Every calculator inherits one base class, so an NDVI, a Sobel filter and a K-Means classification are
           called the same way. No plotting or raster I/O code is needed.
@@ -53,7 +53,7 @@
 
       <!-- Module table -->
       <div class="col-span-12">
-        <h3 class="text-2xl font-light text-fez-50">Modules</h3>
+        <h3 class="text-2xl font-semibold text-fez-50">Modules</h3>
         <p class="paragraph mt-3 max-w-2xl">
           Thirty-seven calculators in five groups, as listed in the FEZrs paper. Each name maps to a class,
           so NDVI is <code class="font-mono text-[0.9em] text-fez-200">NDVICalculator</code>.

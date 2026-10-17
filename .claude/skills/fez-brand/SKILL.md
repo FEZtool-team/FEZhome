@@ -49,7 +49,7 @@ Dark is the default. Light mode lives in `:root[data-theme="light"]` in `main.cs
 ## Components
 
 - Sections: `components/landing/*.vue`, each a `<section id>` with `border-b border-glass py-section`, content inside `<BaseSection>` (12-column grid, `max-w-6xl`).
-- Headings: `<BaseHeading>` with a `#lead` slot. Headings are `font-light`, sentence case.
+- Headings: `<BaseHeading>` with a `#lead` slot. Font is Poppins. Weights by level: page and section titles (h1, section h2) `font-bold`, subheadings (h3) `font-semibold`, small item titles `font-medium`; body text stays regular. Sentence case.
 - Buttons: `<BaseButton>`. Use `variant="primary"` (one per view), `ghost` for secondary actions, and `rs|cc|fm` only inside that tool's panel. Pass `href` to render a link; add `external` for new-tab links.
 - Tool identity: `<ToolsToolBadge tool="rs|cc|fm">` (two-letter badge).
 - Grids of related items use shared hairline cells (`border-l border-t` on the parent, `border-b border-r` on each cell) rather than separate floating cards.

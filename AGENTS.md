@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository.
 
 ## What this is
 
-FEZhome is the single-page landing site for **FEZtool** ("Free & Easy"), which makes open-source tools for Earth sciences. Built with **Nuxt 3** (Vue 3, TypeScript), **Tailwind CSS**, `unplugin-icons` and Google Fonts (Outfit). It is generated statically for GitHub Pages under `/FEZhome/`. It has no backend, no API calls and no test suite.
+FEZhome is the single-page landing site for **FEZtool** ("Free & Easy"), which makes open-source tools for Earth sciences. Built with **Nuxt 3** (Vue 3, TypeScript), **Tailwind CSS**, `unplugin-icons` and Google Fonts (Poppins). It is generated statically for GitHub Pages under `/FEZhome/`. It has no backend, no API calls and no test suite.
 
 ## Commands
 

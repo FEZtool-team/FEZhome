@@ -39,7 +39,7 @@
       <ol class="col-span-12 border-t border-glass lg:col-span-7 lg:col-start-6">
         <li v-for="work in works" :key="work.title" class="border-b border-glass py-7">
           <p class="text-sm text-fez-500">{{ work.year }}, {{ work.venue }}</p>
-          <h3 class="mt-2 text-lg leading-snug text-fez-50">
+          <h3 class="mt-2 text-lg font-medium leading-snug text-fez-50">
             <a
               v-if="work.url"
               :href="work.url"

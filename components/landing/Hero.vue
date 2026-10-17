@@ -8,7 +8,7 @@
 
     <BaseSection class="items-center gap-y-14 py-20 lg:min-h-[calc(100vh-4rem)] lg:py-24">
       <div class="col-span-12 lg:col-span-6">
-        <h1 class="text-gradient text-[2.6rem] font-light leading-[1.05] tracking-tight sm:text-6xl lg:text-[4.25rem]">
+        <h1 class="text-gradient text-[2.6rem] font-bold leading-[1.05] tracking-tight sm:text-6xl lg:text-[4.25rem]">
           Free &amp; Easy tools for Earth sciences
         </h1>
         <p class="mt-7 max-w-lg text-lg leading-relaxed text-fez-400 sm:text-xl">

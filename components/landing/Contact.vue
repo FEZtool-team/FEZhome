@@ -29,7 +29,7 @@
         <div class="glass rounded-lg p-6 sm:p-8">
           <div v-if="submitted" role="status" class="py-6">
             <CheckIcon class="text-4xl text-fez-50" aria-hidden="true" />
-            <h3 class="mt-4 text-xl text-fez-50">Thank you, your message is ready</h3>
+            <h3 class="mt-4 text-xl font-semibold text-fez-50">Thank you, your message is ready</h3>
             <p class="mt-2 text-sm leading-relaxed text-fez-400">
               Online submission is not connected yet. Send the message by email so it reaches the team.
             </p>

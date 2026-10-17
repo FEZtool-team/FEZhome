@@ -20,7 +20,7 @@
       </div>
 
       <header class="col-span-12 sm:col-span-7 lg:col-span-7 lg:col-start-6">
-        <h1 class="text-4xl font-light leading-tight tracking-tight text-fez-50 sm:text-5xl">{{ member.name }}</h1>
+        <h1 class="text-4xl font-bold leading-tight tracking-tight text-fez-50 sm:text-5xl">{{ member.name }}</h1>
         <p v-if="member.alias" class="mt-2 text-fez-500">Known as {{ member.alias }}</p>
         <p class="mt-5 text-xl text-fez-200">{{ member.role }}</p>
         <p class="mt-2 text-sm leading-relaxed text-fez-400">{{ member.affiliation }}</p>
@@ -60,7 +60,7 @@
       </header>
 
       <section class="col-span-12 border-t border-glass pt-10" aria-labelledby="links-heading">
-        <h2 id="links-heading" class="text-2xl font-light text-fez-50">Links</h2>
+        <h2 id="links-heading" class="text-2xl font-semibold text-fez-50">Links</h2>
         <ul class="mt-6 grid border-l border-t border-glass sm:grid-cols-2 lg:grid-cols-3">
           <li v-for="link in member.links" :key="link.href" class="border-b border-r border-glass">
             <a
