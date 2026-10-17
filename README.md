@@ -22,7 +22,7 @@ This repository is the home page of **FEZtool**, an open-source initiative that 
 |---|---|---|
 | [**FEZrs**](https://github.com/FEZtool-team/FEZrs) | Remote sensing: a Python package for geospatial multispectral image processing, with spectral indices, filters, enhancement, change detection, clustering and classification behind one calculator API | Available on [PyPI](https://pypi.org/project/fezrs/) and [Anaconda](https://anaconda.org/FEZtool/fezrs) |
 | **FEZcc** | Climate-change analytics | In planning |
-| **FEZfm** | Fault and geohazard monitoring | In planning |
+| [**FEZfm**](https://github.com/FEZtool-team/FEZfm) | Fault and geohazard monitoring: v1 is an earthquake monitor that merges IRSC, USGS and EMSC reports every 30 minutes and publishes a feed, a map and downloadable data | Live at [feztool-team.github.io/FEZfm](https://feztool-team.github.io/FEZfm/) |
 
 ## Learn more
 

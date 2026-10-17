@@ -44,6 +44,7 @@ const groups = [
       { label: "FEZrs on GitHub", href: "https://github.com/FEZtool-team/FEZrs" },
       { label: "FEZrs on PyPI", href: "https://pypi.org/project/fezrs/" },
       { label: "FEZrs on Anaconda", href: "https://anaconda.org/FEZtool/fezrs" },
+      { label: "FEZfm earthquake monitor", href: "https://feztool-team.github.io/FEZfm/" },
       { label: "Documentation", href: "https://feztool-team.github.io/FEZdocs/" },
     ],
   },
