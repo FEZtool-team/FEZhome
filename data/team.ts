@@ -50,7 +50,6 @@ export const team: Member[] = [
     paperNote: "First author of the FEZrs software paper.",
     image: aradImage,
     links: [
-      { kind: "website", label: "aradfarahani.com", href: "https://aradfarahani.com/" },
       { kind: "github", label: "GitHub", href: "https://github.com/aradfarahani" },
       { kind: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/aradfarahani/" },
       { kind: "orcid", label: "ORCID", href: "https://orcid.org/0009-0008-3800-8688" },
