@@ -14,6 +14,7 @@ import XIcon from "~icons/simple-icons/x";
 import InstagramIcon from "~icons/simple-icons/instagram";
 import FacebookIcon from "~icons/simple-icons/facebook";
 import LeetcodeIcon from "~icons/simple-icons/leetcode";
+import CodeforcesIcon from "~icons/simple-icons/codeforces";
 import PypiIcon from "~icons/simple-icons/pypi";
 import AnacondaIcon from "~icons/simple-icons/anaconda";
 
@@ -30,6 +31,7 @@ const icons: Record<LinkKind, unknown> = {
   instagram: InstagramIcon,
   facebook: FacebookIcon,
   leetcode: LeetcodeIcon,
+  codeforces: CodeforcesIcon,
   pypi: PypiIcon,
   anaconda: AnacondaIcon,
 };

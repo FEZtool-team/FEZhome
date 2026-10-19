@@ -61,7 +61,7 @@ Serious and professional, written for researchers and engineers.
 - Plain, specific statements. Say what a tool does; do not sell it. No exclamation marks, emoji or hype words ("revolutionary", "powerful", "cutting-edge").
 - Sentence case everywhere. No all-caps labels and no eyebrow text above headings.
 - Facts about FEZrs come from the paper and FEZdocs (see the `fezrs-reference` skill). Never invent numbers, users or partners.
-- Team titles are professional roles, not jokes. Only the four core members appear on the site.
+- Team titles are professional roles, not jokes. Only the core members in `data/team.ts` appear on the site (currently six).
 - Buttons name the action: "Request a demo", "Send message", "Read the docs". No arrows appended to button text.
 
 ## Logo and favicon

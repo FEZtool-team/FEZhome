@@ -4,10 +4,12 @@ import aradImage from "~/assets/img/team/aradfarahani.webp";
 import mahdiImage from "~/assets/img/team/mhdned.webp";
 import mohammadImage from "~/assets/img/team/mkiani12.webp";
 import parsaImage from "~/assets/img/team/elmielmo.webp";
+import moradiImage from "~/assets/img/team/sudotome.webp";
+import yazdanifarImage from "~/assets/img/team/yazdanifar.webp";
 
 export type LinkKind =
   | "website" | "github" | "linkedin" | "orcid" | "scholar" | "researchgate"
-  | "x" | "instagram" | "facebook" | "leetcode" | "pypi" | "anaconda";
+  | "x" | "instagram" | "facebook" | "leetcode" | "codeforces" | "pypi" | "anaconda";
 
 export interface MemberLink {
   kind: LinkKind;
@@ -77,7 +79,6 @@ export const team: Member[] = [
     paperNote: "Co-author of the FEZrs software paper.",
     image: mahdiImage,
     links: [
-      { kind: "website", label: "mhdned.ir", href: "https://mhdned.ir" },
       { kind: "github", label: "GitHub", href: "https://github.com/mhdned" },
       { kind: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/mahdi-nedaee-232168242/" },
       { kind: "orcid", label: "ORCID", href: "https://orcid.org/0009-0001-0357-6019" },
@@ -130,6 +131,49 @@ export const team: Member[] = [
       { kind: "orcid", label: "ORCID", href: "https://orcid.org/0009-0005-2751-4161" },
       { kind: "facebook", label: "Facebook", href: "https://www.facebook.com/parsa.elmi" },
       { kind: "instagram", label: "Instagram", href: "https://www.instagram.com/elmiparsa" },
+    ],
+  },
+  {
+    slug: "parsa-moradi",
+    name: "Parsa Moradi",
+    role: "Backend Engineering & Security",
+    summary:
+      "Develops FEZtool's Python backend services and geospatial software, with a background in web and API security testing.",
+    bio: [
+      "Parsa works on the Python backend of FEZtool's production systems. He designs and implements geospatial software that includes machine learning components, and contributes to software architecture, technical design and documentation.",
+      "Before joining FEZtool he worked as an application penetration tester, testing web applications and APIs against the OWASP Web Security Testing Guide. He is a co-author of the FEZrs software paper.",
+    ],
+    affiliation: "Department of Software Engineering, Shamsipour Technical College, Tehran",
+    focus: ["Backend development", "Geospatial software", "Application security"],
+    projects: ["FEZrs"],
+    paperNote: "Co-author of the FEZrs software paper.",
+    image: moradiImage,
+    links: [
+      { kind: "github", label: "GitHub", href: "https://github.com/sudotome" },
+      { kind: "orcid", label: "ORCID", href: "https://orcid.org/0009-0000-2008-123X" },
+    ],
+  },
+  {
+    slug: "mohammadhossein-yazdanifar",
+    name: "Mohammadhossein Yazdanifar",
+    role: "Technical Strategy Lead",
+    summary: "Leads technical strategy at FEZtool and is a co-author of the FEZrs software paper.",
+    bio: [
+      "Mohammadhossein leads technical strategy at FEZtool, guiding the technical direction of the ecosystem.",
+      "He is a co-author of the FEZrs software paper.",
+    ],
+    affiliation: "Department of Industrial Engineering, Sharif University of Technology, Tehran",
+    focus: ["Technical strategy"],
+    projects: ["FEZrs"],
+    paperNote: "Co-author of the FEZrs software paper.",
+    image: yazdanifarImage,
+    links: [
+      { kind: "website", label: "yazdanifar.com", href: "https://yazdanifar.com" },
+      { kind: "github", label: "GitHub", href: "https://github.com/ujubuju" },
+      { kind: "linkedin", label: "LinkedIn", href: "https://www.linkedin.com/in/yazdanifar" },
+      { kind: "orcid", label: "ORCID", href: "https://orcid.org/0009-0009-3929-103X" },
+      { kind: "instagram", label: "Instagram", href: "https://www.instagram.com/m.h.yazdanifar" },
+      { kind: "codeforces", label: "Codeforces", href: "https://codeforces.com/profile/Mohammadrobot" },
     ],
   },
 ];
