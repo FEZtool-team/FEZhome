@@ -122,7 +122,8 @@ const corners = ["left-0 top-0 border-l border-t", "right-0 top-0 border-r borde
   left: 26%;
   width: 40%;
   height: 11%;
-  clip-path: polygon(46% 0, 54% 0, 100% 100%, 0 100%);
+  /* apex at 60% of the beam = 50% of the scene, under the satellite lens */
+  clip-path: polygon(57% 0, 63% 0, 100% 100%, 0 100%);
   background: linear-gradient(to bottom, rgb(var(--rs-400) / 0.5), rgb(var(--rs-400) / 0.05));
   opacity: 0;
 }
