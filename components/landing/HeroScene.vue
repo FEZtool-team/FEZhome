@@ -1,342 +1,566 @@
 <template>
   <!--
-    One 14-second loop: a satellite passes over the coast and scans it, the
-    capture splits into GeoTIFF bands, FEZrs processes them, and three real
-    FEZrs outputs appear. With reduced motion the final frame is shown still.
+    A globe drawn from real land outlines. It spins fast, eases to a stop over
+    a place where satellites recorded a disaster, scans that patch on the
+    sphere, and shows the satellite image with its date, satellite and credit.
+    Then it spins on to the next event. With reduced motion the first event is
+    shown still.
   -->
-  <div class="scene" role="img" :aria-label="description">
-    <span v-for="corner in corners" :key="corner" class="bracket" :class="corner" aria-hidden="true" />
-
+  <div ref="root" class="scene" role="img" :aria-label="description">
     <div class="stage" aria-hidden="true">
-      <!-- Orbit and satellite -->
-      <svg class="orbit" viewBox="0 0 100 20" preserveAspectRatio="none">
-        <path d="M0 16 Q50 -4 100 16" fill="none" stroke="currentColor" stroke-width="0.3" stroke-dasharray="1 1.4" vector-effect="non-scaling-stroke" />
+      <svg class="layer" viewBox="0 0 100 100">
+        <circle v-for="(star, i) in stars" :key="i" :cx="star.x" :cy="star.y" :r="star.r" :opacity="star.o" class="star" />
       </svg>
-      <div class="satellite">
-        <svg viewBox="0 0 64 32" fill="none">
-          <rect x="1" y="11" width="20" height="10" rx="1" fill="currentColor" opacity="0.55" />
-          <rect x="43" y="11" width="20" height="10" rx="1" fill="currentColor" opacity="0.55" />
-          <path d="M7 11v10M13 11v10M49 11v10M55 11v10" stroke="rgb(var(--fez-900))" stroke-width="0.8" />
-          <path d="M21 16h4M39 16h4" stroke="currentColor" stroke-width="1.5" />
-          <rect x="25" y="8" width="14" height="16" rx="2" fill="currentColor" />
-          <circle cx="32" cy="27" r="2.4" fill="currentColor" />
-        </svg>
-      </div>
-      <div class="beam" />
 
-      <!-- Capture, then bands -->
-      <div class="stack">
-        <div v-for="(band, i) in bands" :key="band.name" class="band" :class="`band-${i}`">
-          <img :src="sceneImage" alt="" :style="{ filter: band.filter }" />
-          <span v-if="i === 0" class="band-name">B2–B5.tif</span>
-        </div>
-        <div class="scanline" />
-      </div>
+      <div class="earth" :class="{ ready }" :style="earthStyle"><canvas ref="canvas" /></div>
 
-      <!-- FEZrs -->
-      <div class="link link-in" />
-      <div class="node">
-        <BaseLogo class="h-3 w-auto" />
-        <span>FEZrs</span>
-        <span class="dots"><i /><i /><i /></span>
-      </div>
-      <div class="link link-out" />
-      <div class="rail" />
+      <svg class="layer" viewBox="0 0 100 100">
+        <path ref="leader" class="leader" :class="{ on: showCard }" d="" />
+      </svg>
 
-      <!-- Outputs -->
-      <figure v-for="(out, i) in outputs" :key="out.name" class="output" :class="`output-${i}`">
-        <img :src="out.src" alt="" />
-        <figcaption>{{ out.name }}</figcaption>
+      <figure ref="card" class="card glass" :class="{ on: showCard }">
+        <img :src="ready ? event.src : undefined" alt="" width="800" height="500" />
+        <figcaption>
+          <span class="card-title">{{ event.title }}</span>
+          <span class="card-line">{{ event.place }} · {{ event.eventDate }}</span>
+          <span class="card-line">{{ event.satellite }} ({{ event.sensor }}) · {{ event.imageDate }}</span>
+          <span class="card-credit">{{ event.credit }}</span>
+        </figcaption>
       </figure>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import sceneImage from "~/assets/img/fezrs/hsv.webp";
-import kmeans from "~/assets/img/fezrs/kmeans.webp";
-import ndvi from "~/assets/img/fezrs/ndvi.webp";
-import ndwi from "~/assets/img/fezrs/ndwi.webp";
+import { land } from "~/data/land";
+import { events as eventData } from "~/data/events";
 
 const description =
-  "Illustration: a satellite scans a coastal area, the capture is split into GeoTIFF bands, FEZrs processes them, and three outputs appear: K-Means clustering, NDVI and NDWI.";
+  "Illustration: a globe turns to places where satellites recorded natural disasters and climate events, and shows the satellite image of each with its date and the satellite that took it.";
 
-// Stylised band layers of the captured scene (front to back).
-const bands = [
-  { name: "B2.tif", filter: "grayscale(1) contrast(1.15) brightness(0.9)" },
-  { name: "B3.tif", filter: "grayscale(1) contrast(1.3) brightness(0.75)" },
-  { name: "B4.tif", filter: "grayscale(1) contrast(1.5) brightness(0.65)" },
-  { name: "B5.tif", filter: "grayscale(1) invert(0.85) contrast(1.2)" },
-];
+const images = import.meta.glob<string>("/assets/img/events/*.webp", { eager: true, import: "default" });
+const events = eventData.map((e) => ({ ...e, src: images[`/assets/img/events/${e.slug}.webp`] ?? "" }));
 
-const outputs = [
-  { name: "K-Means", src: kmeans },
-  { name: "NDVI", src: ndvi },
-  { name: "NDWI", src: ndwi },
-];
+// ---------- layout (scene units, 0-100) ----------
+const C = { x: 46, y: 44 };
+const R = 36; // Earth
+const SPIN_S = 2.8; // fast spin to the next place
+const HOLD_S = 6.6; // stopped on the place
+const SCAN = { start: 0.4, sweep: 2.0 }; // seconds into the hold
+const CARD = { in: 1.3, out: 6.0 };
+const DRIFT = 0.6; // degrees per second while stopped
+const rad = Math.PI / 180;
+const TAU = Math.PI * 2;
 
-const corners = ["left-0 top-0 border-l border-t", "right-0 top-0 border-r border-t", "left-0 bottom-0 border-b border-l", "right-0 bottom-0 border-b border-r"];
+const earthStyle = { left: `${C.x - R}%`, top: `${C.y - R}%`, width: `${R * 2}%` };
+
+// The view centre for an event: a little east and south of the place, so the
+// place sits up and to the left of the card.
+const viewFor = (e: { lon: number; lat: number }) => ({ lon: e.lon + 12, lat: Math.max(-70, Math.min(70, e.lat - 10)) });
+
+const current = ref(0);
+const showCard = ref(false);
+const ready = ref(false); // event images are requested only once the globe starts
+const event = computed(() => events[current.value]);
+
+// ---------- stars ----------
+let seed = 11;
+const rand = () => {
+  seed = (seed * 16807) % 2147483647;
+  return seed / 2147483647;
+};
+const stars = Array.from({ length: 80 }, () => ({
+  x: +(rand() * 100).toFixed(1),
+  y: +(rand() * 100).toFixed(1),
+  r: +(0.1 + rand() * (rand() < 0.1 ? 0.45 : 0.22)).toFixed(2),
+  o: +(0.25 + rand() * 0.55).toFixed(2),
+}));
+
+// ---------- globe ----------
+const root = ref<HTMLElement | null>(null);
+const canvas = ref<HTMLCanvasElement | null>(null);
+const leader = ref<SVGPathElement | null>(null);
+const card = ref<HTMLElement | null>(null);
+
+let stopLoop: (() => void) | undefined;
+
+onMounted(() => {
+  const el = canvas.value;
+  const ctx = el?.getContext("2d");
+  const scene = root.value;
+  if (!el || !ctx || !scene || !events.length) return;
+
+  const cs = getComputedStyle(el);
+  const ocean = `rgb(${cs.getPropertyValue("--earth-ocean").trim()})`;
+  const ground = `rgb(${cs.getPropertyValue("--earth-land").trim()})`;
+  const rs300 = cs.getPropertyValue("--rs-300").trim();
+  const rs400 = cs.getPropertyValue("--rs-400").trim();
+  const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Land outlines packed once: per point sin/cos of longitude and latitude, so
+  // a frame needs only multiplications. Each ring also gets a bounding cap, so
+  // rings on the far side are skipped without touching their points.
+  type Land = { start: number; n: number; cx: number; cy: number; cz: number; rho: number };
+  let sinL: Float64Array, cosL: Float64Array, sinP: Float64Array, cosP: Float64Array;
+  let xs: Float64Array, ys: Float64Array, zs: Float64Array;
+  let caps: Land[] = [];
+  const pack = () => {
+    const total = land.reduce((sum, ring) => sum + ring.length / 2, 0);
+    sinL = new Float64Array(total);
+    cosL = new Float64Array(total);
+    sinP = new Float64Array(total);
+    cosP = new Float64Array(total);
+    caps = [];
+    let at = 0;
+    for (const ring of land) {
+      const n = ring.length / 2;
+      let cx = 0;
+      let cy = 0;
+      let cz = 0;
+      for (let i = 0; i < n; i++) {
+        const lam = ring[2 * i] * rad;
+        const phi = ring[2 * i + 1] * rad;
+        sinL[at + i] = Math.sin(lam);
+        cosL[at + i] = Math.cos(lam);
+        sinP[at + i] = Math.sin(phi);
+        cosP[at + i] = Math.cos(phi);
+        cx += cosP[at + i] * cosL[at + i];
+        cy += cosP[at + i] * sinL[at + i];
+        cz += sinP[at + i];
+      }
+      const l = Math.hypot(cx, cy, cz) || 1;
+      cx /= l;
+      cy /= l;
+      cz /= l;
+      let rho = 0;
+      for (let i = 0; i < n; i++) {
+        const dot = cx * cosP[at + i] * cosL[at + i] + cy * cosP[at + i] * sinL[at + i] + cz * sinP[at + i];
+        rho = Math.max(rho, Math.acos(Math.min(1, dot)));
+      }
+      caps.push({ start: at, n, cx, cy, cz, rho });
+      at += n;
+    }
+    xs = new Float64Array(Math.max(...caps.map((c) => c.n)));
+    ys = new Float64Array(xs.length);
+    zs = new Float64Array(xs.length);
+  };
+  let size = 0;
+  let dpr = 1;
+  let visible = true;
+  let raf = 0;
+
+  // the view: centre longitude and latitude, and their sin/cos
+  const view = { lon: 0, lat: 0, sin: 0, cos: 1, s0: 0, c0: 1 };
+  const setView = (lon: number, lat: number) => {
+    view.lon = lon;
+    view.lat = lat;
+    view.sin = Math.sin(lat * rad);
+    view.cos = Math.cos(lat * rad);
+    view.s0 = Math.sin(lon * rad);
+    view.c0 = Math.cos(lon * rad);
+  };
+  // orthographic projection; y points down the screen, z > 0 faces the viewer
+  const project = (lon: number, lat: number) => {
+    const lam = (lon - view.lon) * rad;
+    const phi = lat * rad;
+    const cosPhi = Math.cos(phi);
+    return {
+      x: cosPhi * Math.sin(lam),
+      y: -(view.cos * Math.sin(phi) - view.sin * cosPhi * Math.cos(lam)),
+      z: view.sin * Math.sin(phi) + view.cos * cosPhi * Math.cos(lam),
+    };
+  };
+
+  // One land outline, clipped at the horizon. The visible stretches are joined
+  // along the limb, each exit to the next entry clockwise (the land rings are
+  // all wound the same way), so a ring that dips behind the globe never cuts
+  // across the disk.
+  type Stretch = { pts: number[]; from: number; to: number };
+  const traceRing = (cap: Land, r: number) => {
+    const n = cap.n;
+    // the ring's cap against the visible hemisphere
+    const facing = view.c0 * view.cos * cap.cx + view.s0 * view.cos * cap.cy + view.sin * cap.cz;
+    if (facing < -Math.sin(cap.rho)) return; // entirely on the far side
+    const { c0, s0, cos: vc, sin: vs } = view;
+    let shown = 0;
+    for (let i = 0; i < n; i++) {
+      const k = cap.start + i;
+      const sinLam = sinL[k] * c0 - cosL[k] * s0;
+      const cosLam = cosL[k] * c0 + sinL[k] * s0;
+      xs[i] = cosP[k] * sinLam;
+      ys[i] = -(vc * sinP[k] - vs * cosP[k] * cosLam);
+      zs[i] = vs * sinP[k] + vc * cosP[k] * cosLam;
+      if (zs[i] > 0) shown++;
+    }
+    if (!shown) return;
+    if (shown === n) {
+      ctx.moveTo(r + xs[0] * r, r + ys[0] * r);
+      for (let i = 1; i < n; i++) ctx.lineTo(r + xs[i] * r, r + ys[i] * r);
+      ctx.closePath();
+      return;
+    }
+
+    // split into visible stretches, each starting and ending on the limb
+    let start = 0;
+    while (!(zs[start] <= 0 && zs[(start + 1) % n] > 0)) start++;
+    const limb = (p: number, i: number) => {
+      const t = zs[p] / (zs[p] - zs[i]);
+      const x = xs[p] + (xs[i] - xs[p]) * t;
+      const y = ys[p] + (ys[i] - ys[p]) * t;
+      const l = Math.hypot(x, y) || 1;
+      return [x / l, y / l];
+    };
+    const stretches: Stretch[] = [];
+    let cur: Stretch | undefined;
+    for (let j = 1; j <= n; j++) {
+      const i = (start + j) % n;
+      const p = (start + j - 1) % n;
+      if (zs[i] > 0) {
+        if (zs[p] <= 0) {
+          const [x, y] = limb(p, i);
+          cur = { pts: [x, y], from: Math.atan2(y, x), to: 0 };
+        }
+        cur!.pts.push(xs[i], ys[i]);
+      } else if (zs[p] > 0 && cur) {
+        const [x, y] = limb(p, i);
+        cur.pts.push(x, y);
+        cur.to = Math.atan2(y, x);
+        stretches.push(cur);
+        cur = undefined;
+      }
+    }
+
+    const used = new Set<number>();
+    for (let first = 0; first < stretches.length; first++) {
+      if (used.has(first)) continue;
+      let s = first;
+      ctx.moveTo(r + stretches[s].pts[0] * r, r + stretches[s].pts[1] * r);
+      while (!used.has(s)) {
+        used.add(s);
+        const pts = stretches[s].pts;
+        for (let i = 0; i < pts.length; i += 2) ctx.lineTo(r + pts[i] * r, r + pts[i + 1] * r);
+        const end = stretches[s].to;
+        let next = s;
+        let gap = Infinity;
+        stretches.forEach((q, k) => {
+          const d = (((q.from - end) % TAU) + TAU) % TAU;
+          if (d < gap) {
+            gap = d;
+            next = k;
+          }
+        });
+        ctx.arc(r, r, r, end, end + gap);
+        s = next;
+      }
+      ctx.closePath();
+    }
+  };
+
+  // ---------- marks drawn on the sphere ----------
+  // the point at angular distance d (degrees) and bearing b (radians) from a place
+  const dest = (lon: number, lat: number, d: number, b: number) => {
+    const phi = lat * rad;
+    const dr = d * rad;
+    const lat2 = Math.asin(Math.sin(phi) * Math.cos(dr) + Math.cos(phi) * Math.sin(dr) * Math.cos(b));
+    const lon2 = lon * rad + Math.atan2(Math.sin(b) * Math.sin(dr) * Math.cos(phi), Math.cos(dr) - Math.sin(phi) * Math.sin(lat2));
+    return project(lon2 / rad, lat2 / rad);
+  };
+  const pen = (q: { x: number; y: number }, r: number, move: boolean) =>
+    move ? ctx.moveTo(r + q.x * r, r + q.y * r) : ctx.lineTo(r + q.x * r, r + q.y * r);
+  // a circle of the given angular radius around a place, lying on the surface
+  const ring = (lon: number, lat: number, radius: number, r: number) => {
+    ctx.beginPath();
+    for (let i = 0; i <= 48; i++) pen(dest(lon, lat, radius, (i / 48) * TAU), r, i === 0);
+  };
+  // a pie slice of that circle, from bearing 0 (north) clockwise to `upTo`
+  const sector = (lon: number, lat: number, radius: number, upTo: number, r: number) => {
+    ctx.beginPath();
+    pen(project(lon, lat), r, true);
+    const steps = Math.max(2, Math.ceil((upTo / TAU) * 48));
+    for (let i = 0; i <= steps; i++) pen(dest(lon, lat, radius, (i / steps) * upTo), r, false);
+    ctx.closePath();
+  };
+
+  const drawMarks = (e: (typeof events)[number], hold: number, r: number) => {
+    const fade = Math.min(hold / 0.4, 1, (HOLD_S - hold) / 0.5);
+    if (fade <= 0) return;
+    ctx.save();
+    ctx.lineJoin = "round";
+
+    // the scan: a circle on the surface, swept once around like a radar
+    const radius = 6; // degrees
+    const progress = Math.min(Math.max((hold - SCAN.start) / SCAN.sweep, 0), 1);
+    const angle = progress * TAU;
+    ring(e.lon, e.lat, radius, r);
+    ctx.setLineDash([3, 3]);
+    ctx.strokeStyle = `rgb(${rs300} / ${0.7 * fade})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    ctx.setLineDash([]);
+    if (progress > 0) {
+      sector(e.lon, e.lat, radius, angle, r);
+      ctx.fillStyle = `rgb(${rs400} / ${0.14 * fade})`;
+      ctx.fill();
+      // inner rings, draped over the surface
+      for (const k of [1 / 3, 2 / 3]) {
+        ring(e.lon, e.lat, radius * k, r);
+        ctx.strokeStyle = `rgb(${rs300} / ${0.25 * fade})`;
+        ctx.lineWidth = 0.6;
+        ctx.stroke();
+      }
+    }
+    if (progress > 0 && progress < 1) {
+      // the sweep arm
+      ctx.beginPath();
+      pen(project(e.lon, e.lat), r, true);
+      for (let i = 1; i <= 8; i++) pen(dest(e.lon, e.lat, (radius * i) / 8, angle), r, false);
+      ctx.shadowColor = `rgb(${rs400})`;
+      ctx.shadowBlur = 8;
+      ctx.strokeStyle = `rgb(${rs300} / ${fade})`;
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
+    }
+
+    // the place: a dot and a ripple spreading over the surface
+    const ripple = (hold * 0.6) % 1;
+    ring(e.lon, e.lat, 0.6 + ripple * 5, r);
+    ctx.strokeStyle = `rgb(${rs300} / ${(1 - ripple) * fade})`;
+    ctx.lineWidth = 1;
+    ctx.stroke();
+    const p = project(e.lon, e.lat);
+    ctx.beginPath();
+    ctx.arc(r + p.x * r, r + p.y * r, 2.2, 0, TAU);
+    ctx.fillStyle = `rgb(${rs300} / ${fade})`;
+    ctx.fill();
+    ctx.restore();
+  };
+
+  const drawEarth = (marks?: { e: (typeof events)[number]; hold: number }) => {
+    if (!caps.length) pack();
+    const r = size / 2;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, size, size);
+    ctx.save();
+    ctx.beginPath();
+    ctx.arc(r, r, r, 0, TAU);
+    ctx.clip();
+    ctx.fillStyle = ocean;
+    ctx.fillRect(0, 0, size, size);
+    ctx.fillStyle = ground;
+    ctx.beginPath();
+    for (const cap of caps) traceRing(cap, r);
+    ctx.fill();
+    // soft light from the upper left, a little darker toward the limb
+    const light = ctx.createRadialGradient(r * 0.7, r * 0.6, r * 0.1, r, r, r);
+    light.addColorStop(0, "rgba(255,255,255,0.1)");
+    light.addColorStop(0.7, "rgba(0,0,0,0)");
+    light.addColorStop(1, "rgba(0,0,0,0.3)");
+    ctx.fillStyle = light;
+    ctx.fillRect(0, 0, size, size);
+    if (marks) drawMarks(marks.e, marks.hold, r);
+    ctx.restore();
+  };
+
+  // leader from the place to the card's top-left corner (scene units); the
+  // card sits on the bottom edge, so its top depends on the caption height
+  let cardTop = 54;
+  const placeLeader = (e: (typeof events)[number]) => {
+    const p = project(e.lon, e.lat);
+    const x = C.x + p.x * R;
+    const y = C.y + p.y * R;
+    leader.value?.setAttribute("d", `M${x.toFixed(2)} ${y.toFixed(2)}L${(x + 3).toFixed(2)} ${(y + 3).toFixed(2)}L53 ${cardTop.toFixed(2)}`);
+  };
+
+  // ---------- timeline: spin, then hold on the event ----------
+  const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  let index = 0;
+  let phaseStart = 0;
+  let spinning = true;
+  let from = { lon: 0, lat: 15 };
+  let to = viewFor(events[0]);
+  let spinBy = 0;
+  const preload = (i: number) => {
+    const img = new Image();
+    img.src = events[i].src;
+  };
+  const startSpin = (now: number, next: number) => {
+    from = { lon: view.lon, lat: view.lat };
+    to = viewFor(events[next]);
+    // turn eastward (centre longitude decreasing) at least one full turn
+    spinBy = -(((((from.lon - to.lon) % 360) + 360) % 360) + 360);
+    index = next;
+    phaseStart = now;
+    spinning = true;
+    preload(next);
+  };
+
+  let lastNow = 0;
+  let lastDraw = 0;
+  const tick = (now: number) => {
+    raf = requestAnimationFrame(tick);
+    // off screen the timeline waits, so the first spin is seen, not skipped
+    if (!visible || !size) phaseStart += now - (lastNow || now);
+    lastNow = now;
+    if (!visible || !size) return;
+    const t = (now - phaseStart) / 1000;
+    if (spinning) {
+      const k = ease(Math.min(t / SPIN_S, 1));
+      setView(from.lon + spinBy * k, from.lat + (to.lat - from.lat) * k);
+      drawEarth();
+      if (t >= SPIN_S) {
+        spinning = false;
+        phaseStart = now;
+        current.value = index;
+      }
+      return;
+    }
+    // once the scan is done only a slow drift and a ripple remain: 20 fps is plenty
+    if (t > SCAN.start + SCAN.sweep + 0.2 && now - lastDraw < 50) return;
+    lastDraw = now;
+    setView(to.lon - DRIFT * t, to.lat);
+    const e = events[index];
+    drawEarth({ e, hold: t });
+    placeLeader(e);
+    const card = t > CARD.in && t < CARD.out;
+    if (card !== showCard.value) showCard.value = card;
+    if (t >= HOLD_S) startSpin(now, (index + 1) % events.length);
+  };
+
+  const resize = () => {
+    dpr = Math.min(window.devicePixelRatio || 1, 1.5); // a phone at 3x would paint 4x the pixels
+    size = el.clientWidth;
+    el.width = Math.round(size * dpr);
+    el.height = Math.round(size * dpr);
+    if (card.value) cardTop = (card.value.offsetTop / scene.clientHeight) * 100;
+    if (still) {
+      const v = viewFor(events[0]);
+      setView(v.lon, v.lat);
+      drawEarth({ e: events[0], hold: SCAN.start + SCAN.sweep });
+      placeLeader(events[0]);
+    }
+  };
+
+  setView(from.lon, from.lat);
+  resize();
+  const ro = new ResizeObserver(resize);
+  ro.observe(el);
+  const io = new IntersectionObserver(([entry]) => (visible = entry.isIntersecting));
+  io.observe(scene);
+  // Start after the page has loaded and the browser is idle, so the globe never
+  // competes with the first paint or with the page's own scripts.
+  let idle = 0;
+  let stopped = false;
+  const begin = () => {
+    if (stopped) return;
+    drawEarth(); // a first frame, then the globe fades in and the spin starts
+    ready.value = true;
+    raf = requestAnimationFrame((now) => {
+      startSpin(now, 0); // the first spin also turns the globe, from wherever it starts
+      tick(now);
+    });
+  };
+  const whenIdle = () => {
+    idle = "requestIdleCallback" in window ? window.requestIdleCallback(begin, { timeout: 2500 }) : window.setTimeout(begin, 800);
+  };
+  if (still) {
+    ready.value = true;
+    showCard.value = true;
+  } else if (document.readyState === "complete") whenIdle();
+  else window.addEventListener("load", whenIdle, { once: true });
+  stopLoop = () => {
+    stopped = true;
+    window.removeEventListener("load", whenIdle);
+    if ("cancelIdleCallback" in window) window.cancelIdleCallback(idle);
+    cancelAnimationFrame(raf);
+    ro.disconnect();
+    io.disconnect();
+  };
+});
+
+onBeforeUnmount(() => stopLoop?.());
 </script>
 
 <style scoped>
 .scene {
-  --cycle: 14s;
   position: relative;
   aspect-ratio: 1;
   width: 100%;
-  color: rgb(var(--fez-100));
 }
-.bracket {
-  position: absolute;
-  width: 1.5rem;
-  height: 1.5rem;
-  border-color: rgb(var(--fez-400));
-}
-.stage {
+.stage,
+.layer {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-}
-
-/* ---------- final frame (also the reduced-motion state) ---------- */
-.orbit {
-  position: absolute;
-  left: 4%;
-  right: 4%;
-  top: 3%;
-  height: 12%;
-  width: 92%;
-  color: rgb(var(--fez-500));
-}
-.satellite {
-  position: absolute;
-  top: 3.5%;
-  left: 50%;
-  width: 12%;
-  transform: translateX(-50%) rotate(0deg);
-  color: rgb(var(--fez-200));
-}
-.beam {
-  position: absolute;
-  top: 9%;
-  left: 26%;
-  width: 40%;
-  height: 11%;
-  /* apex at 60% of the beam = 50% of the scene, under the satellite lens */
-  clip-path: polygon(57% 0, 63% 0, 100% 100%, 0 100%);
-  background: linear-gradient(to bottom, rgb(var(--rs-400) / 0.5), rgb(var(--rs-400) / 0.05));
-  opacity: 0;
-}
-.stack {
-  position: absolute;
-  left: 26%;
-  top: 20%;
-  width: 40%;
-  height: 33%;
-}
-.band {
-  position: absolute;
-  inset: 0;
-  overflow: hidden;
-  border-radius: 3px;
-  border: 1px solid var(--border-glass-strong);
-  background: rgb(var(--fez-950));
-  box-shadow: 0 6px 16px -8px rgb(0 0 0 / 0.6);
-}
-.band img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
 }
-.band-0 { z-index: 4; transform: translate(0, 0); }
-.band-1 { z-index: 3; transform: translate(6%, 7%); }
-.band-2 { z-index: 2; transform: translate(12%, 14%); }
-.band-3 { z-index: 1; transform: translate(18%, 21%); }
-.band-name {
+.star { fill: rgb(var(--fez-300)); }
+.earth {
   position: absolute;
-  left: 4px;
-  bottom: 3px;
-  font: 500 clamp(8px, 1.6vw, 10px) / 1 ui-monospace, SFMono-Regular, Menlo, monospace;
-  color: #fff;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 0.8);
-}
-.scanline {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  z-index: 5;
-  height: 1px;
-  background: rgb(var(--rs-300));
-  box-shadow: 0 0 10px 2px rgb(var(--rs-400) / 0.6);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  box-shadow: 0 0 40px -6px rgb(var(--fez-400) / 0.45);
   opacity: 0;
+  transition: opacity 0.9s ease;
 }
-.link {
-  position: absolute;
-  left: 50%;
-  width: 1px;
-  background: rgb(var(--fez-500));
-  transform-origin: top;
-}
-.link-in { top: 61%; height: 4.5%; }
-.link-out { top: 71%; height: 4%; }
-.rail {
-  position: absolute;
-  top: 75%;
-  left: 18%;
-  right: 18%;
-  height: 1px;
-  background: rgb(var(--fez-500));
-}
-.node {
-  position: absolute;
-  top: 65.5%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.3rem 0.75rem;
-  border-radius: 9999px;
-  border: 1px solid rgb(var(--rs-500) / 0.6);
-  background: rgb(var(--fez-900));
-  box-shadow: var(--glow-rs);
-  font-size: clamp(10px, 2.4vw, 12px);
-  color: rgb(var(--fez-50));
-  white-space: nowrap;
-}
-.dots {
-  display: inline-flex;
-  gap: 2px;
-}
-.dots i {
-  width: 3px;
-  height: 3px;
-  border-radius: 9999px;
-  background: rgb(var(--rs-400));
-  opacity: 0.4;
-}
-.output {
-  position: absolute;
-  top: 78%;
-  width: 26%;
-  margin: 0;
-}
-.output-0 { left: 5%; }
-.output-1 { left: 37%; }
-.output-2 { left: 69%; }
-.output img {
+.earth.ready { opacity: 1; }
+.earth canvas {
   display: block;
   width: 100%;
-  aspect-ratio: 1.45;
+  height: 100%;
+  border-radius: inherit;
+}
+.leader {
+  fill: none;
+  stroke: rgb(var(--rs-300) / 0.8);
+  stroke-width: 0.25;
+  stroke-dasharray: 0.6 0.6;
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.leader.on { opacity: 1; }
+
+.card {
+  position: absolute;
+  left: 53%;
+  bottom: 0;
+  width: 46%;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 12px;
+  opacity: 0;
+  transform: translateY(6px) scale(0.97);
+  transform-origin: top left;
+  transition: opacity 0.5s ease, transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card.on {
+  opacity: 1;
+  transform: none;
+}
+.card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
   object-fit: cover;
-  border-radius: 3px;
-  border: 1px solid rgb(var(--rs-500) / 0.45);
 }
-.output figcaption {
-  margin-top: 0.3rem;
-  text-align: center;
-  font-size: clamp(9px, 2vw, 11px);
-  color: rgb(var(--fez-400));
+.card figcaption {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.45rem 0.6rem 0.5rem;
+  line-height: 1.3;
 }
-
-/* ---------- the loop ---------- */
-@media (prefers-reduced-motion: no-preference) {
-  .stage { animation: stage var(--cycle) linear infinite; }
-  .satellite { animation: satellite var(--cycle) cubic-bezier(0.45, 0, 0.55, 1) infinite; }
-  .beam { animation: beam var(--cycle) linear infinite; }
-  .band-0 { animation: capture var(--cycle) linear infinite; }
-  .band-1 { animation: band-1 var(--cycle) cubic-bezier(0.22, 1, 0.36, 1) infinite; }
-  .band-2 { animation: band-2 var(--cycle) cubic-bezier(0.22, 1, 0.36, 1) infinite; }
-  .band-3 { animation: band-3 var(--cycle) cubic-bezier(0.22, 1, 0.36, 1) infinite; }
-  .band-name { animation: band-name var(--cycle) linear infinite; }
-  .scanline { animation: scan var(--cycle) linear infinite; }
-  .link-in { animation: link-in var(--cycle) linear infinite; }
-  .node { animation: node var(--cycle) linear infinite; }
-  .dots i { animation: dot 0.9s ease-in-out infinite; }
-  .dots i:nth-child(2) { animation-delay: 0.15s; }
-  .dots i:nth-child(3) { animation-delay: 0.3s; }
-  .link-out { animation: link-out var(--cycle) linear infinite; }
-  .rail { animation: rail var(--cycle) linear infinite; }
-  .output-0 { animation: output-0 var(--cycle) ease-out infinite; }
-  .output-1 { animation: output-1 var(--cycle) ease-out infinite; }
-  .output-2 { animation: output-2 var(--cycle) ease-out infinite; }
+.card-title {
+  font-size: clamp(11px, 2.6vw, 13px);
+  font-weight: 500;
+  color: rgb(var(--fez-50));
 }
-
-@keyframes stage {
-  0%, 90% { opacity: 1; }
-  97%, 100% { opacity: 0; }
+.card-line {
+  font-size: clamp(9px, 2.1vw, 11px);
+  color: rgb(var(--fez-300));
 }
-/* enter (0-12%), hover while scanning (12-36%), leave (36-46%) */
-@keyframes satellite {
-  0% { left: -10%; transform: translateX(-50%) translateY(40%) rotate(-12deg); }
-  12%, 36% { left: 50%; transform: translateX(-50%) translateY(0) rotate(0deg); }
-  46%, 100% { left: 112%; transform: translateX(-50%) translateY(40%) rotate(12deg); }
-}
-@keyframes beam {
-  0%, 12% { opacity: 0; }
-  15%, 33% { opacity: 1; }
-  36%, 100% { opacity: 0; }
-}
-@keyframes capture {
-  0%, 14% { clip-path: inset(0 0 100% 0); }
-  33%, 100% { clip-path: inset(0 0 0 0); }
-}
-@keyframes scan {
-  0%, 13% { top: 0; opacity: 0; }
-  14% { top: 0; opacity: 1; }
-  33% { top: 100%; opacity: 1; }
-  34%, 100% { top: 100%; opacity: 0; }
-}
-@keyframes band-1 {
-  0%, 38% { transform: translate(0, 0); opacity: 0; }
-  39% { opacity: 1; }
-  46%, 100% { transform: translate(6%, 7%); opacity: 1; }
-}
-@keyframes band-2 {
-  0%, 40% { transform: translate(0, 0); opacity: 0; }
-  41% { opacity: 1; }
-  48%, 100% { transform: translate(12%, 14%); opacity: 1; }
-}
-@keyframes band-3 {
-  0%, 42% { transform: translate(0, 0); opacity: 0; }
-  43% { opacity: 1; }
-  50%, 100% { transform: translate(18%, 21%); opacity: 1; }
-}
-@keyframes band-name {
-  0%, 44% { opacity: 0; }
-  50%, 100% { opacity: 1; }
-}
-@keyframes link-in {
-  0%, 50% { transform: scaleY(0); }
-  55%, 100% { transform: scaleY(1); }
-}
-@keyframes node {
-  0%, 53% { opacity: 0; transform: translateX(-50%) scale(0.9); }
-  57%, 100% { opacity: 1; transform: translateX(-50%) scale(1); }
-}
-@keyframes dot {
-  0%, 100% { opacity: 0.25; }
-  50% { opacity: 1; }
-}
-@keyframes link-out {
-  0%, 60% { transform: scaleY(0); }
-  63%, 100% { transform: scaleY(1); }
-}
-@keyframes rail {
-  0%, 62% { transform: scaleX(0); }
-  66%, 100% { transform: scaleX(1); }
-}
-@keyframes output-0 {
-  0%, 66% { opacity: 0; transform: translateY(12%); }
-  70%, 100% { opacity: 1; transform: translateY(0); }
-}
-@keyframes output-1 {
-  0%, 71% { opacity: 0; transform: translateY(12%); }
-  75%, 100% { opacity: 1; transform: translateY(0); }
-}
-@keyframes output-2 {
-  0%, 76% { opacity: 0; transform: translateY(12%); }
-  80%, 100% { opacity: 1; transform: translateY(0); }
+.card-credit {
+  font-size: clamp(8px, 1.8vw, 9.5px);
+  color: rgb(var(--fez-500));
 }
 </style>

@@ -56,6 +56,10 @@
   --fm-800: 30 64 175; /* #1E40AF */
   --fm-900: 30 58 138; /* #1E3A8A */
 
+  /* The hero globe stays dark in both themes, like a photograph. */
+  --earth-ocean: 50 58 68;
+  --earth-land: 118 128 138;
+
   --border-glass: rgba(255, 255, 255, 0.08);
   --border-glass-strong: rgba(255, 255, 255, 0.16);
 

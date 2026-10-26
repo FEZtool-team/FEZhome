@@ -31,7 +31,8 @@ app.vue                  # NuxtLayout + NuxtPage
 layouts/default.vue      # skip link, Navbar, <slot>, Footer
 pages/index.vue          # stacks the Landing* sections in order
 pages/team/[slug].vue    # member pages, prerendered (linked from the Team cards)
-data/                    # team.ts (members, links, ORCIDs), logo.ts (generated logo paths)
+data/                    # team.ts (members, links, ORCIDs), logo.ts (generated logo paths),
+                         #   land.ts (Natural Earth outlines), events.ts (hero globe events + sources)
 composables/useTheme.ts  # system/light/dark preference
 utils/highlight.ts       # tiny Python/bash highlighter for code blocks
 components/

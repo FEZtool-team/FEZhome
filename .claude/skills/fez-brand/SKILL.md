@@ -78,7 +78,7 @@ Serious and professional, written for researchers and engineers.
 
 ## Motion
 
-- One orchestrated moment: the hero pipeline (`components/landing/HeroScene.vue`), a 14 s CSS loop (satellite scan → GeoTIFF bands → FEZrs → outputs). Its default styles are the final frame, and the keyframes apply only under `prefers-reduced-motion: no-preference`.
+- One orchestrated moment: the hero globe (`components/landing/HeroScene.vue`). A canvas draws real land outlines (`data/land.ts`), clipped at the horizon by joining visible stretches along the limb. It spins fast to an event from `data/events.ts`, stops, scans the place on the sphere and shows a card with the NASA image, the satellite and sensor, the dates and the credit. Captions credit the satellite, never FEZtool; every fact must match the event's `sourceUrl`. Reduced motion shows the first event still.
 - Any other motion should answer a user action (theme toggle, tabs, the compare slider returning to centre).
 
 ## Code blocks
