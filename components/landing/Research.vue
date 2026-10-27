@@ -62,6 +62,7 @@
 <script setup lang="ts">
 import AwardIcon from "~icons/material-symbols-light/workspace-premium-outline";
 import PaperIcon from "~icons/material-symbols-light/article-outline";
+import { ids } from "~/data/schema";
 
 const works = [
   {
@@ -100,4 +101,20 @@ const works = [
     url: "",
   },
 ];
+
+// Published works (not the field study) as ScholarlyArticle entries about FEZrs.
+const { siteUrl } = useRuntimeConfig().public;
+useJsonLd(
+  works
+    .filter((w) => typeof w.year === "number" && w.url)
+    .map((w) => ({
+      "@type": "ScholarlyArticle",
+      headline: w.title,
+      datePublished: String(w.year),
+      author: w.authors.split(", ").map((name) => ({ "@type": "Person", name })),
+      url: w.url,
+      ...(w.url.startsWith("https://doi.org/") ? { sameAs: w.url } : {}),
+      about: { "@id": ids(siteUrl).fezrs },
+    }))
+);
 </script>

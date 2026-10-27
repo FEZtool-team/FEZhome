@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository.
 
 ## What this is
 
-FEZhome is the single-page landing site for **FEZtool** ("Free & Easy"), which makes open-source tools for Earth sciences. Built with **Nuxt 3** (Vue 3, TypeScript), **Tailwind CSS**, `unplugin-icons` and Google Fonts (Poppins). It is generated statically for GitHub Pages under `/FEZhome/`. It has no backend, no API calls and no test suite.
+FEZhome is the landing site for **FEZtool** ("Free & Easy"), which makes open-source tools for Earth sciences. Built with **Nuxt 3** (Vue 3, TypeScript), **Tailwind CSS**, `unplugin-icons` and Google Fonts (Poppins). It is generated statically for GitHub Pages and served at https://feztool.com/ (custom domain, base `/`). It has no backend, no API calls and no test suite.
 
 ## Commands
 
@@ -12,7 +12,7 @@ FEZhome is the single-page landing site for **FEZtool** ("Free & Easy"), which m
 npm install
 npm run dev                                   # http://localhost:3035
 npm run build                                 # github-pages preset → .output/public
-NUXT_APP_BASE_URL=/FEZhome/ npm run generate  # what CI deploys
+npm run generate                              # what CI deploys (base /, site https://feztool.com)
 ```
 
 Verify changes with `npm run build` and a check in the dev server, including a 375px mobile width with no horizontal scroll. Use Node 24 / npm 11 (same as CI) so `package-lock.json` stays valid for `npm ci`. `README.md` is the public face of the org's home page: keep it about FEZtool, not about building the site. Only one Nuxt process can run per checkout: stop `nuxt dev` before running `build`/`generate`, or the lock check fails. npm only (`package-lock.json`).
@@ -31,9 +31,12 @@ app.vue                  # NuxtLayout + NuxtPage
 layouts/default.vue      # skip link, Navbar, <slot>, Footer
 pages/index.vue          # stacks the Landing* sections in order
 pages/team/[slug].vue    # member pages, prerendered (linked from the Team cards)
+pages/fezrs.vue, fezfm.vue  # tool pages (/fezrs/, /fezfm/)
 data/                    # team.ts (members, links, ORCIDs), logo.ts (generated logo paths),
                          #   land.ts (Natural Earth outlines), events.ts (hero globe events + sources)
 composables/useTheme.ts  # system/light/dark preference
+composables/usePageSeo.ts, useJsonLd.ts  # canonical, OG/Twitter tags, JSON-LD
+data/schema.ts           # schema.org entities; @ids shared with FEZfm and FEZdocs
 utils/highlight.ts       # tiny Python/bash highlighter for code blocks
 components/
   base/                  # Navbar, Footer, Section (12-col grid), Heading, Button, Logo, ThemeToggle
@@ -57,6 +60,13 @@ nuxt.config.ts           # baseURL, head/meta, Tailwind token mapping, github-pa
 - `<script setup lang="ts">`; Tailwind utilities first, `<style scoped>` only when Tailwind can't express it.
 - Icons: `~icons/<collection>/<name>` (e.g. `material-symbols-light`, `mdi`). Check the name exists in `@iconify/json`.
 - Images: put them in `assets/img/` and import them so Vite fingerprints them and applies the baseURL. Anything in `public/` must be referenced with the baseURL.
+
+## SEO
+
+- Every page calls `usePageSeo({ path, title, description, image? })` (canonical, OG and Twitter tags, all absolute from `runtimeConfig.public.siteUrl`) and `useJsonLd([...])` with entities from `data/schema.ts`. Keep the `@id`s stable: FEZfm and FEZdocs reference `https://feztool.com/#organization` and `/fezrs/#software`.
+- URLs end in a slash (GitHub Pages redirects `/fezrs` to `/fezrs/`); `NuxtLink` appends it automatically.
+- `sitemap.xml` is written after prerendering from the HTML pages produced (hook in `nuxt.config.ts`), so new pages are listed automatically. It exists only in `generate` output, not in `nuxt dev`.
+- OG cards are 1200×630 PNGs in `public/og/`, rendered from `scripts/og/card.html` with headless Chrome (command in that file).
 
 ## Gotchas
 

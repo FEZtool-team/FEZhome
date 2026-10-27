@@ -95,6 +95,7 @@
 <script setup lang="ts">
 import BackIcon from "~icons/material-symbols-light/arrow-back-rounded";
 import { team } from "~/data/team";
+import { person } from "~/data/schema";
 
 const route = useRoute();
 const member = computed(() => team.find((m) => m.slug === route.params.slug));
@@ -104,10 +105,18 @@ if (!member.value) {
 const others = computed(() => team.filter((m) => m.slug !== member.value?.slug));
 const host = (href: string) => new URL(href).hostname.replace(/^www\./, "");
 
-useSeoMeta({
-  title: () => `${member.value?.name}, ${member.value?.role} | FEZtool`,
-  description: () => member.value?.summary,
-  ogTitle: () => `${member.value?.name} | FEZteam`,
-  ogDescription: () => member.value?.summary,
-});
+const { siteUrl } = useRuntimeConfig().public;
+const absolute = useAbsoluteUrl();
+
+usePageSeo(() => ({
+  path: `/team/${member.value!.slug}/`,
+  title: `${member.value!.name}, ${member.value!.role} | FEZtool`,
+  description: member.value!.summary,
+  image: member.value!.image,
+  imageWidth: 400,
+  imageHeight: 400,
+  imageAlt: `Portrait of ${member.value!.name}`,
+  type: "profile",
+}));
+useJsonLd(() => [person(siteUrl, member.value!, absolute(member.value!.image))]);
 </script>

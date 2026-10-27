@@ -52,7 +52,8 @@ import CloseIcon from "~icons/material-symbols-light/close-rounded";
 const links = [
   { label: "About", to: "/#about" },
   { label: "Tools", to: "/#tools" },
-  { label: "FEZrs", to: "/#fezrs" },
+  { label: "FEZrs", to: "/fezrs/" },
+  { label: "FEZfm", to: "/fezfm/" },
   { label: "Research", to: "/#research" },
   { label: "Docs", to: "/#docs" },
   { label: "Team", to: "/#team" },
