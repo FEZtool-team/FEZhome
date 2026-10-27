@@ -50,6 +50,8 @@
               :src="current.src"
               :alt="`${current.name} output computed with FEZrs`"
               class="mx-auto aspect-square max-h-[36rem] w-full object-contain"
+              width="1200"
+              height="1200"
               loading="lazy"
             />
           </div>

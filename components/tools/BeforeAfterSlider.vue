@@ -5,8 +5,8 @@
     :style="{ '--pos': `${compareWidth}%`, '--return-ms': `${RETURN_MS}ms` }"
   >
     <!-- Both images share one box, so they always cover the same area. -->
-    <img class="compare__img" :src="beforeImage" :alt="beforeLabel" draggable="false" />
-    <img class="compare__img compare__img--after" :src="afterImage" :alt="afterLabel" draggable="false" />
+    <img class="compare__img" :src="beforeImage" :alt="beforeLabel" width="1200" height="1200" loading="lazy" draggable="false" />
+    <img class="compare__img compare__img--after" :src="afterImage" :alt="afterLabel" width="1200" height="1200" loading="lazy" draggable="false" />
 
     <span class="compare__label compare__label--after">{{ afterLabel }}</span>
     <span class="compare__label compare__label--before">{{ beforeLabel }}</span>

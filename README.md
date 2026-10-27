@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://feztool-team.github.io/FEZhome/">
+  <a href="https://feztool.com/">
     <picture>
       <source media="(prefers-color-scheme: dark)" srcset="assets/img/logo/logo-light.svg">
       <img src="assets/img/logo/logo-dark.svg" alt="FEZtool" width="160">
@@ -11,7 +11,7 @@
 
 <p align="center">
   Free &amp; Easy tools for Earth sciences<br>
-  <a href="https://feztool-team.github.io/FEZhome/"><strong>feztool-team.github.io/FEZhome</strong></a>
+  <a href="https://feztool.com/"><strong>feztool.com</strong></a>
 </p>
 
 This repository is the home page of **FEZtool**, an open-source initiative that builds free, easy-to-use tools for Earth-science researchers, engineers and students. The name says it: **F**ree and **EZ** (easy).
@@ -20,16 +20,16 @@ This repository is the home page of **FEZtool**, an open-source initiative that 
 
 | Tool | Domain | Status |
 |---|---|---|
-| [**FEZrs**](https://github.com/FEZtool-team/FEZrs) | Remote sensing: a Python package for geospatial multispectral image processing, with spectral indices, filters, enhancement, change detection, clustering and classification behind one calculator API | Available on [PyPI](https://pypi.org/project/fezrs/) and [Anaconda](https://anaconda.org/FEZtool/fezrs) |
+| [**FEZrs**](https://feztool.com/fezrs/) | Remote sensing: a Python package for geospatial multispectral image processing, with spectral indices, filters, enhancement, change detection, clustering and classification behind one calculator API | Available on [PyPI](https://pypi.org/project/fezrs/) and [Anaconda](https://anaconda.org/FEZtool/fezrs); source on [GitHub](https://github.com/FEZtool-team/FEZrs) |
 | **FEZcc** | Climate-change analytics | In planning |
-| [**FEZfm**](https://github.com/FEZtool-team/FEZfm) | Fault and geohazard monitoring: v1 is an earthquake monitor that merges IRSC, USGS and EMSC reports every 30 minutes and publishes a feed, a map and downloadable data | Live at [feztool-team.github.io/FEZfm](https://feztool-team.github.io/FEZfm/) |
+| [**FEZfm**](https://feztool.com/fezfm/) | Fault and geohazard monitoring: v1 is an earthquake monitor that merges USGS and EMSC reports every 30 minutes and publishes a feed, a map and downloadable data | Live at [fezfm.feztool.com](https://fezfm.feztool.com/); source on [GitHub](https://github.com/FEZtool-team/FEZfm) |
 
 ## Learn more
 
-- **Website:** [feztool-team.github.io/FEZhome](https://feztool-team.github.io/FEZhome/)
+- **Website:** [feztool.com](https://feztool.com/)
 - **Documentation:** [FEZdocs](https://feztool-team.github.io/FEZdocs/)
 - **FEZrs paper:** [manuscript](https://github.com/FEZtool-team/FEZrs/blob/main/paper/paper.md) (under review at the Journal of Open Source Software)
-- **Team:** [FEZteam](https://feztool-team.github.io/FEZhome/#team)
+- **Team:** [FEZteam](https://feztool.com/#team)
 
 ## Community
 

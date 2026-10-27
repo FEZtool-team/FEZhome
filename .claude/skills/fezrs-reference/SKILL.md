@@ -100,4 +100,4 @@ Do not claim: a JOSS acceptance (it is under review), user counts, institutional
 - Outputs are **cropped to their content box before resizing** (filters: 100px margin on 7899×7900; HSV: 100px on 4050²; K-Means: 50px on 5875²). The originals have different white margins, so uncropped versions do not line up in the compare slider. Cropped this way, HSV and K-Means register exactly, and so do all five filters.
 - `ndvi.webp` / `ndwi.webp` are the image areas of figure 2's panels (c) and (d), without axes or colorbars (used in the hero animation). The full paper figures are not shown on the site.
 - PCA outputs are deliberately not used: the multi-panel figure is not legible at web size.
-- To refresh: download the originals, flatten onto white, crop, resize to 1200px, and save as WebP at quality 82.
+- To refresh: download the originals, flatten onto white, crop, resize to 1200px, and save as WebP at quality 82. Exceptions, to keep page weight down: `sobel.webp` (1000px, quality 60) and `kmeans.webp` (1000px, quality 70). Scaling keeps the framing, so they still register with their slider partners.

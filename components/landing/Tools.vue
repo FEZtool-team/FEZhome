@@ -36,7 +36,7 @@
           <ToolsChip>Apache-2.0</ToolsChip>
         </div>
         <div class="mt-8 flex flex-wrap gap-3">
-          <BaseButton href="#fezrs" variant="rs">See what it does</BaseButton>
+          <BaseButton to="/fezrs/" variant="rs">See what it does</BaseButton>
           <BaseButton href="https://github.com/FEZtool-team/FEZrs" external variant="ghost">
             <GithubIcon aria-hidden="true" /> GitHub
           </BaseButton>
@@ -59,7 +59,7 @@
         <h3 id="tool-fm" class="mt-8 text-3xl font-semibold text-fez-50">FEZfm</h3>
         <p class="mt-1 text-sm text-fm-300">Fault and geohazard monitoring</p>
         <p class="mt-5 leading-relaxed text-fez-300">
-          Version 1 is an earthquake monitor. Every 30 minutes it collects reports from IRSC, USGS and EMSC,
+          Version 1 is an earthquake monitor. Every 30 minutes it collects reports from USGS and EMSC,
           merges reports of the same quake, tags fault zones, significant events and active sequences, and
           publishes a feed, a map and downloadable data.
         </p>
@@ -73,7 +73,8 @@
           A research tool, not an official earthquake warning service.
         </p>
         <div class="mt-auto flex flex-wrap gap-3 pt-8">
-          <BaseButton href="https://feztool-team.github.io/FEZfm/" external variant="fm">Open the monitor</BaseButton>
+          <BaseButton href="https://fezfm.feztool.com/" external variant="fm">Open the monitor</BaseButton>
+          <BaseButton to="/fezfm/" variant="ghost">How it works</BaseButton>
           <BaseButton href="https://github.com/FEZtool-team/FEZfm" external variant="ghost">
             <GithubIcon aria-hidden="true" /> GitHub
           </BaseButton>
@@ -108,7 +109,7 @@
 import GithubIcon from "~icons/mdi/github";
 
 const fmFacts = [
-  { term: "Sources", detail: "IRSC (Iran and adjacent areas), USGS and EMSC (worldwide)" },
+  { term: "Sources", detail: "USGS and EMSC (worldwide); EMSC is the main source for Iran" },
   { term: "Updates", detail: "Every 30 minutes, published to GitHub Pages" },
   { term: "Data", detail: "An event feed, plus CSV, GeoJSON and Parquet downloads" },
 ];

@@ -41,10 +41,12 @@ const groups = [
   {
     title: "Tools",
     links: [
+      { label: "FEZrs", href: "/fezrs/" },
+      { label: "FEZfm", href: "/fezfm/" },
       { label: "FEZrs on GitHub", href: "https://github.com/FEZtool-team/FEZrs" },
       { label: "FEZrs on PyPI", href: "https://pypi.org/project/fezrs/" },
       { label: "FEZrs on Anaconda", href: "https://anaconda.org/FEZtool/fezrs" },
-      { label: "FEZfm earthquake monitor", href: "https://feztool-team.github.io/FEZfm/" },
+      { label: "FEZfm earthquake monitor", href: "https://fezfm.feztool.com/" },
       { label: "Documentation", href: "https://feztool-team.github.io/FEZdocs/" },
     ],
   },

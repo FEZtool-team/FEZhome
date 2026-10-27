@@ -1,0 +1,96 @@
+<!doctype html>
+<!--
+  Open Graph cards (1200×630) for public/og/. Pick the card with ?card=feztool|fezrs|fezfm and
+  render with headless Chrome from the repo root, for example:
+
+  for c in feztool fezrs fezfm; do
+    google-chrome --headless --hide-scrollbars --force-device-scale-factor=1 --window-size=1200,630 \
+      --virtual-time-budget=5000 --screenshot="public/og/$c.png" "file://$PWD/scripts/og/card.html?card=$c"
+  done
+
+  Colors are the fez-* and tool tokens from assets/css/main.css (dark theme).
+-->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;700&display=block" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1200px; height: 630px; overflow: hidden; }
+  body {
+    position: relative;
+    font-family: Poppins, sans-serif;
+    color: #F8F9FA;
+    background: #212529;
+  }
+  .grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgb(255 255 255 / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(255 255 255 / 0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 80% 30%, black 10%, transparent 75%);
+  }
+  .glow { position: absolute; width: 640px; height: 640px; right: -160px; top: -220px; border-radius: 50%; filter: blur(40px); }
+  .content { position: absolute; inset: 72px 80px; display: flex; flex-direction: column; }
+  .logo { height: 56px; width: auto; align-self: flex-start; }
+  .badge {
+    display: inline-grid; place-items: center; width: 84px; height: 84px; border-radius: 12px;
+    border: 2px solid; font-size: 30px; font-weight: 500; letter-spacing: 0.04em; margin-top: auto;
+  }
+  h1 { margin-top: auto; font-size: 76px; line-height: 1.05; font-weight: 700; letter-spacing: -0.02em; }
+  .badge:not([hidden]) + h1 { margin-top: 28px; }
+  p { margin-top: 20px; font-size: 30px; line-height: 1.35; font-weight: 300; color: #ADB5BD; max-width: 900px; }
+  .url { position: absolute; right: 80px; top: 84px; font-size: 22px; color: #6C757D; }
+  [hidden] { display: none; }
+</style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="glow" id="glow"></div>
+  <div class="content">
+    <img class="logo" src="../../assets/img/logo/logo-light.svg" alt="">
+    <span class="badge" id="badge" hidden></span>
+    <h1 id="title"></h1>
+    <p id="lead"></p>
+  </div>
+  <span class="url" id="url"></span>
+  <script>
+    const cards = {
+      feztool: {
+        title: "Free & Easy tools<br>for Earth sciences",
+        lead: "Open-source Python tooling for remote sensing, climate and geohazards.",
+        url: "feztool.com",
+        glow: "rgb(248 249 250 / 0.08)",
+      },
+      fezrs: {
+        badge: "RS", color: "#72B01D", text: "#A9D766",
+        title: "FEZrs",
+        lead: "A Python package for multispectral remote sensing: spectral indices, filters, PCA, clustering and change detection.",
+        url: "feztool.com/fezrs",
+        glow: "rgb(114 176 29 / 0.22)",
+      },
+      fezfm: {
+        badge: "FM", color: "#3B82F6", text: "#93C5FD",
+        title: "FEZfm",
+        lead: "Earthquake and fault-zone monitor: USGS and EMSC reports merged every 30 minutes.",
+        url: "fezfm.feztool.com",
+        glow: "rgb(59 130 246 / 0.22)",
+      },
+    };
+    const c = cards[new URLSearchParams(location.search).get("card")] || cards.feztool;
+    document.getElementById("title").innerHTML = c.title;
+    document.getElementById("lead").textContent = c.lead;
+    document.getElementById("url").textContent = c.url;
+    document.getElementById("glow").style.background = c.glow;
+    if (c.badge) {
+      const b = document.getElementById("badge");
+      b.hidden = false;
+      b.textContent = c.badge;
+      b.style.color = c.text;
+      b.style.borderColor = c.color + "80";
+      b.style.background = c.color + "1a";
+    }
+  </script>
+</body>
+</html>
